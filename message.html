@@ -33,4 +33,164 @@
         @keyframes scroll{0%{transform:translateX(100%);}100%{transform:translateX(-100%);}}
         nav{width:100%;background:#181818;padding:15px 0;text-align:center;border-bottom:2px solid #ff2e92;}
         nav a{
-            color:#ffb8d8;text-decoration:none
+            color:#ffb8d8;text-decoration:none;font-size:16px;margin:0 12px;padding:8px 14px;
+            border-radius:20px;transition:0.3s;
+        }
+        nav a:hover{background:#ff2e92;color:#000;box-shadow:0 0 12px #ff2e92;}
+        .box{
+            width:90%;max-width:1200px;margin:30px auto;background:#151515;padding:25px;
+            border-radius:18px;border:1px solid #ff2e9280;box-shadow:0 0 25px #d83cff40;
+        }
+        .box h2{margin-bottom:20px;color:#ff2e92;border-left:4px solid #ff2e92;padding-left:10px;}
+        .msg-item{
+            background:#0f0f0f;
+            padding:18px;
+            border-radius:12px;
+            margin-bottom:16px;
+            border:1px solid #ff2e9260;
+        }
+        .msg-name{color:#ff2e92;font-size:18px;margin-bottom:8px;}
+        .msg-time{color:#aaa;font-size:13px;margin-bottom:10px;}
+        .msg-text{color:#ffb8d8;line-height:1.7;font-size:16px;}
+        .btn{
+            display:inline-block;padding:10px 22px;background:linear-gradient(45deg,#ff2e92,#d83cff);
+            color:#000;border:none;border-radius:30px;font-weight:bold;cursor:pointer;margin:8px;
+            transition:0.3s;
+        }
+        .btn-sm{padding:6px 12px;font-size:14px;}
+        .btn:hover{transform:scale(1.05);box-shadow:0 0 15px #ff2e92;}
+        .theme-toggle{
+            position:fixed;top:15px;right:15px;z-index:999;
+        }
+        input,textarea{
+            width:100%;padding:12px;margin:8px 0;border-radius:8px;border:1px solid #ff2e92;background:#111;color:#fff;font-size:16px;
+        }
+        footer{margin-top:50px;padding:20px;text-align:center;color:#aaa;font-size:14px;border-top:1px solid #222;}
+    </style>
+</head>
+<body class="dark">
+    <div class="notice">
+        <div class="notice-scroll">留言交友｜留下你的心情｜本地永久存储｜可删除自己留言｜全站通用主题切换</div>
+    </div>
+
+    <div class="theme-toggle">
+        <button class="btn" onclick="toggleTheme()">切换夜间模式</button>
+    </div>
+
+    <div style="text-align:center;margin:25px 0;">
+        <h1 class="neon-text">留言板</h1>
+        <p style="color:#ffb8d8;margin-top:8px;">在这里留下你的心事与留言</p>
+    </div>
+
+    <nav>
+        <a href="index.html">首页</a>
+        <a href="avatar.html">头像馆</a>
+        <a href="yulu.html">伤感语录</a>
+        <a href="dress.html">穿搭分享</a>
+        <a href="submit.html">自拍投稿</a>
+        <a href="music.html">音乐播放器</a>
+        <a href="message.html">留言板</a>
+        <a href="material.html">素材下载</a>
+        <a href="filter.html">在线滤镜</a>
+        <a href="card.html">个人资料卡</a>
+    </nav>
+
+    <div class="box">
+        <h2>发表新留言</h2>
+        <input type="text" id="msgName" placeholder="你的昵称">
+        <textarea id="msgContent" rows="4" placeholder="输入留言内容..."></textarea>
+        <button class="btn" onclick="sendMessage()">提交留言</button>
+    </div>
+
+    <div class="box">
+        <h2>全部留言</h2>
+        <div id="msgList"></div>
+    </div>
+
+    <footer>
+        精神小妹专属天地 © 2026 | 留言本地存储，清除浏览器数据会丢失
+    </footer>
+
+    <script>
+        // 读取本地留言
+        function getMsgData(){
+            let data = localStorage.getItem('spiritMsgList');
+            return data ? JSON.parse(data) : [];
+        }
+        function saveMsgData(list){
+            localStorage.setItem('spiritMsgList', JSON.stringify(list));
+        }
+
+        // 渲染留言
+        function renderMsg(){
+            const listBox = document.getElementById('msgList');
+            listBox.innerHTML = '';
+            const msgArr = getMsgData();
+            if(msgArr.length === 0){
+                listBox.innerHTML = '<p style="color:#aaa">暂无留言，快来第一条吧！</p>';
+                return;
+            }
+            msgArr.forEach((item,idx)=>{
+                const div = document.createElement('div');
+                div.className = 'msg-item';
+                div.innerHTML = `
+                    <div class="msg-name">${item.name}</div>
+                    <div class="msg-time">${item.time}</div>
+                    <div class="msg-text">${item.content}</div>
+                    <button class="btn btn-sm" onclick="delMsg(${idx})">删除本条</button>
+                `;
+                listBox.appendChild(div);
+            })
+        }
+
+        // 提交留言
+        function sendMessage(){
+            const name = document.getElementById('msgName').value.trim();
+            const content = document.getElementById('msgContent').value.trim();
+            if(!name || !content){
+                alert('昵称和留言内容不能为空！');
+                return;
+            }
+            const now = new Date().toLocaleString();
+            const msgArr = getMsgData();
+            msgArr.unshift({name, content, time: now});
+            saveMsgData(msgArr);
+            // 清空输入
+            document.getElementById('msgName').value = '';
+            document.getElementById('msgContent').value = '';
+            renderMsg();
+            alert('留言发布成功！');
+        }
+
+        // 删除留言
+        function delMsg(index){
+            const msgArr = getMsgData();
+            msgArr.splice(index,1);
+            saveMsgData(msgArr);
+            renderMsg();
+        }
+
+        // 漂浮爱心
+        function createHeart(){
+            const heart = document.createElement('div');
+            heart.className = 'heart';
+            heart.innerHTML = '❤';
+            heart.style.left = Math.random()*100+'vw';
+            heart.style.fontSize = Math.random()*20+10+'px';
+            heart.style.color = ['#ff2e92','#d83cff','#ffd700'][Math.floor(Math.random()*3)];
+            document.body.appendChild(heart);
+            setTimeout(()=>heart.remove(),8000);
+        }
+        setInterval(createHeart,300);
+
+        // 主题切换
+        function toggleTheme(){
+            document.body.classList.toggle('dark');
+            document.body.classList.toggle('light');
+        }
+
+        // 初始化
+        renderMsg();
+    </script>
+</body>
+</html>
