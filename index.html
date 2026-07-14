@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>精神小妹专属天地</title>
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box;font-family:"微软雅黑",sans-serif;}
+        body.dark{background:#0a0a0a;color:#fff;}
+        body.light{background:#fff0f6;color:#111;}
+        .heart{position:fixed;pointer-events:none;animation:heartMove 8s linear infinite;opacity:0.7;z-index:-1;}
+        @keyframes heartMove{
+            0%{transform:translateY(100vh) rotate(0deg);opacity:0;}
+            10%{opacity:1;}
+            90%{opacity:1;}
+            100%{transform:translateY(-10vh) rotate(360deg);opacity:0;}
+        }
+        .neon-text{
+            font-size:36px;font-weight:bold;
+            color:#fff;
+            text-shadow:
+                0 0 5px #ff2e92,
+                0 0 10px #ff2e92,
+                0 0 20px #ff2e92,
+                0 0 40px #d83cff;
+            animation:flash 1.5s ease-in-out infinite alternate;
+        }
+        @keyframes flash{0%{opacity:0.8;}100%{opacity:1;}}
+        .notice{
+            width:100%;height:35px;background:#ff2e92;line-height:35px;overflow:hidden;
+        }
+        .notice-scroll{
+            white-space:nowrap;animation:scroll 20s linear infinite;color:#111;font-weight:bold;
+        }
+        @keyframes scroll{0%{transform:translateX(100%);}100%{transform:translateX(-100%);}}
+        nav{width:100%;background:#181818;padding:15px 0;text-align:center;border-bottom:2px solid #ff2e92;}
+        nav a{
+            color:#ffb8d8;text-decoration:none;font-size:16px;margin:0 12px;padding:8px 14px;
+            border-radius:20px;transition:0.3s;
+        }
+        nav a:hover{background:#ff2e92;color:#000;box-shadow:0 0 12px #ff2e92;}
+        .box{
+            width:90%;max-width:1200px;margin:30px auto;background:#151515;padding:25px;
+            border-radius:18px;border:1px solid #ff2e9280;box-shadow:0 0 25px #d83cff40;
+        }
+        .box h2{margin-bottom:20px;color:#ff2e92;border-left:4px solid #ff2e92;padding-left:10px;}
+        .swiper{width:100%;height:320px;overflow:hidden;border-radius:12px;margin:20px 0;position:relative;}
+        .swiper-img{display:flex;width:400%;animation:swiperRun 20s linear infinite;}
+        .swiper-img img{width:100%;height:320px;object-fit:cover;}
+        @keyframes swiperRun{0%{transform:translateX(0);}100%{transform:translateX(-300%);}}
+        .btn{
+            display:inline-block;padding:10px 22px;background:linear-gradient(45deg,#ff2e92,#d83cff);
+            color:#000;border:none;border-radius:30px;font-weight:bold;cursor:pointer;margin:8px;
+            transition:0.3s;
+        }
+        .btn:hover{transform:scale(1.05);box-shadow:0 0 15px #ff2e92;}
+        footer{margin-top:50px;padding:20px;text-align:center;color:#aaa;font-size:14px;border-top:1px solid #222;}
+        .mini-music{
+            position:fixed;bottom:20px;right:20px;background:#111;padding:12px;border-radius:50px;
+            border:1px solid #ff2e92;z-index:999;
+        }
+        .theme-toggle{
+            position:fixed;top:15px;right:15px;z-index:999;
+        }
+        .visit-count{
+            color:#ffb8d8;margin-top:10px;
+        }
+    </style>
+</head>
+<body class="dark">
+    <div class="notice">
+        <div class="notice-scroll">欢迎来到精神小妹专属天地｜上千张非主流头像｜海量伤感emo语录｜免费穿搭素材｜在线修图滤镜｜可投稿自拍｜留言交友｜自带DJ音乐播放器</div>
+    </div>
+
+    <div class="theme-toggle">
+        <button class="btn" onclick="toggleTheme()">切换夜间模式</button>
+    </div>
+
+    <div style="text-align:center;margin:25px 0;">
+        <h1 class="neon-text">精神小妹专属天地</h1>
+        <p style="color:#ffb8d8;margin-top:8px;">不被世俗定义，做独一份的自己</p>
+        <div class="visit-count" id="visitCount">访客统计加载中...</div>
+    </div>
+
+    <nav>
+        <a href="index.html">首页</a>
+        <a href="avatar.html">头像馆</a>
+        <a href="yulu.html">伤感语录</a>
+        <a href="dress.html">穿搭分享</a>
+        <a href="submit.html">自拍投稿</a>
+        <a href="music.html">音乐播放器</a>
+        <a href="message.html">留言板</a>
+        <a href="material.html">素材下载</a>
+        <a href="filter.html">在线滤镜</a>
+        <a href="card.html">个人资料卡</a>
+    </nav>
+
+    <div class="box">
+        <div class="swiper">
+            <div class="swiper-img">
+                <img src="https://picsum.photos/id/1021/1200/320" alt="精神小妹氛围感">
+                <img src="https://picsum.photos/id/1031/1200/320" alt="土酷穿搭">
+                <img src="https://picsum.photos/id/1040/1200/320" alt="非主流背景">
+                <img src="https://picsum.photos/id/1060/1200/320" alt="甜丧自拍">
+            </div>
+        </div>
+    </div>
+
+    <div class="box">
+        <h2>✨今日热门伤感语录</h2>
+        <div id="randomYulu" style="font-size:18px;line-height:2;padding:15px;background:#0f0f0f;border-radius:10px;margin:15px 0;color:#ffb8d8;">
+            新鲜感上头的时候，谁都能是偏爱
+        </div>
+        <button class="btn" onclick="getNewYulu()">刷新新文案</button>
+        <button class="btn" onclick="copyText()">一键复制文案</button>
+        <button class="btn" onclick="createYuluPoster()">生成语录海报</button>
+    </div>
+
+    <div class="box">
+        <h2>🔧快捷工具</h2>
+        <div>
+            <a href="avatar.html" class="btn">海量头像</a>
+            <a href="filter.html" class="btn">在线图片滤镜</a>
+            <a href="material.html" class="btn">素材打包下载</a>
+            <a href="card.html" class="btn">生成个人资料卡</a>
+            <a href="message.html" class="btn">去留言交友</a>
+        </div>
+    </div>
+
+    <div class="mini-music">
+        <audio id="miniAudio" loop>
+            <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3">
+        </audio>
+        <button class="btn" onclick="playAudio()">播放BGM</button>
+    </div>
+
+    <footer>
+        精神小妹专属天地 © 2026 | 所有素材免费自用，禁止商用 | 全站前端本地运行无需服务器
+    </footer>
+
+    <canvas id="posterCanvas" style="display:none;"></canvas>
+
+    <script>
+        function createHeart(){
+            const heart = document.createElement('div');
+            heart.className = 'heart';
+            heart.innerHTML = '❤';
+            heart.style.left = Math.random()*100+'vw';
+            heart.style.fontSize = Math.random()*20+10+'px';
+            heart.style.color = ['#ff2e92','#d83cff','#ffd700'][Math.floor(Math.random()*3)];
+            document.body.appendChild(heart);
+            setTimeout(()=>heart.remove(),8000);
+        }
+        setInterval(createHeart,300);
+
+        const yuluList = [
+            "新鲜感上头的时候，谁都能是偏爱",
+            "后来我什么都想开了，就是什么都错过了",
+            "拽姐不需要任何人的救赎，自己撑伞",
+            "网恋始于聊天，止于见面，终于冷淡",
+            "情绪上头的那一刻，像极了疯子",
+            "不讨好谁，不将就谁，做冷感小妹",
+            "夜里崩溃一万次，白天依旧装作无所谓",
+            "你权衡利弊，我及时止损，互不亏欠"
+        ];
+
+        function getNewYulu(){
+            let random = Math.floor(Math.random()*yuluList.length);
+            document.getElementById('randomYulu').innerText = yuluList[random];
+        }
+
+        function copyText(){
+            let text = document.getElementById('randomYulu').innerText;
+            navigator.clipboard.writeText(text).then(()=>alert("文案复制成功！"));
+        }
+
+        function createYuluPoster(){
+            let text = document.getElementById('randomYulu').innerText;
+            let canvas = document.getElementById('posterCanvas');
+            canvas.width = 750;
+            canvas.height = 1334;
+            let ctx = canvas.getContext('2d');
+
+            let gradient = ctx.createLinearGradient(0,0,750,1334);
+            gradient.addColorStop(0,'#ff2e92');
+            gradient.addColorStop(0.5,'#d83cff');
+            gradient.addColorStop(1,'#111');
+            ctx.fillStyle = gradient;
+            ctx.fillRect(0,0,750,1334);
+
+            ctx.fillStyle = '#fff';
+            ctx.font = 'bold 48px "微软雅黑"';
+            ctx.textAlign = 'center';
+            ctx.lineHeight = 80;
+
+            let words = text.split('');
+            let line = '';
+            let y = 600;
+            for(let i=0;i<words.length;i++){
+                let test = line + words[i];
+                if(ctx.measureText(test).width > 620){
+                    ctx.fillText(line,375,y);
+                    line = words[i];
+                    y += 70;
+                }else{
+                    line = test;
+                }
+            }
+            ctx.fillText(line,375,y);
+
+            ctx.font = '24px "微软雅黑"';
+            ctx.fillStyle = '#ffb8d8';
+            ctx.fillText('精神小妹专属语录',375,1200);
+
+            let link = document.createElement('a');
+            link.download = '语录海报.png';
+            link.href = canvas.toDataURL('image/png');
+            link.click();
+        }
+
+        const audio = document.getElementById('miniAudio');
+        function playAudio(){
+            if(audio.paused) audio.play();
+            else audio.pause();
+        }
+
+        document.addEventListener('mousemove',(e)=>{
+            let dot = document.createElement('div');
+            dot.style.position='fixed';
+            dot.style.left=e.clientX+'px';
+            dot.style.top=e.clientY+'px';
+            dot.style.pointerEvents='none';
+            dot.style.color='#ff2e92';
+            dot.innerText='♡';
+            dot.style.fontSize='14px';
+            dot.style.zIndex='9999';
+            document.body.appendChild(dot);
+            setTimeout(()=>dot.remove(),600);
+        })
+
+        function toggleTheme(){
+            document.body.classList.toggle('dark');
+            document.body.classList.toggle('light');
+        }
+
+        function countVisit(){
+            let count = localStorage.getItem('spiritVisitCount') || 0;
+            count = Number(count) + 1;
+            localStorage.setItem('spiritVisitCount',count);
+            document.getElementById('visitCount').innerText = '累计访客：' + count + ' 次';
+        }
+        countVisit();
+    </script>
+</body>
+</html>
