@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>自拍投稿 - 精神小妹专属天地</title>
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box;font-family:"微软雅黑",sans-serif;}
+        body.dark{background:#0a0a0a;color:#fff;}
+        body.light{background:#fff0f6;color:#111;}
+        .heart{position:fixed;pointer-events:none;animation:heartMove 8s linear infinite;opacity:0.7;z-index:-1;}
+        @keyframes heartMove{
+            0%{transform:translateY(100vh) rotate(0deg);opacity:0;}
+            10%{opacity:1;}
+            90%{opacity:1;}
+            100%{transform:translateY(-10vh) rotate(360deg);opacity:0;}
+        }
+        .neon-text{
+            font-size:32px;font-weight:bold;
+            color:#fff;
+            text-shadow:
+                0 0 5px #ff2e92,
+                0 0 10px #ff2e92,
+                0 0 20px #ff2e92,
+                0 0 40px #d83cff;
+        }
+        .notice{
+            width:100%;height:35px;background:#ff2e92;line-height:35px;overflow:hidden;
+        }
+        .notice-scroll{
+            white-space:nowrap;animation:scroll 20s linear infinite;color:#111;font-weight:bold;
+        }
+        @keyframes scroll{0%{transform:translateX(100%);}100%{transform:translateX(-100%);}}
+        nav{width:100%;background:#181818;padding:15px 0;text-align:center;border-bottom:2px solid #ff2e92;}
+        nav a{
+            color:#ffb8d8;text-decoration:none;font-size:16px;margin:0 12px;padding:8px 14px;
+            border-radius:20px;transition:0.3s;
+        }
+        nav a:hover{background:#ff2e92;color:#000;box-shadow:0 0 12px #ff2e92;}
+        .box{
+            width:90%;max-width:1200px;margin:30px auto;background:#151515;padding:25px;
+            border-radius:18px;border:1px solid #ff2e9280;box-shadow:0 0 25px #d83cff40;
+        }
+        .box h2{margin-bottom:20px;color:#ff2e92;border-left:4px solid #ff2e92;padding-left:10px;}
+        .btn{
+            display:inline-block;padding:10px 22px;background:linear-gradient(45deg,#ff2e92,#d83cff);
+            color:#000;border:none;border-radius:30px;font-weight:bold;cursor:pointer;margin:8px;
+            transition:0.3s;
+        }
+        .btn:hover{transform:scale(1.05);box-shadow:0 0 15px #ff2e92;}
+        .theme-toggle{
+            position:fixed;top:15px;right:15px;z-index:999;
+        }
+        footer{margin-top:50px;padding:20px;text-align:center;color:#aaa;font-size:14px;border-top:1px solid #222;}
+    </style>
+</head>
+<body class="dark">
+    <div class="notice">
+        <div class="notice-scroll">自拍投稿｜上传照片｜添加滤镜｜生成专属展示卡片｜保存到本地</div>
+    </div>
+
+    <div class="theme-toggle">
+        <button class="btn" onclick="toggleTheme()">切换夜间模式</button>
+    </div>
+
+    <div style="text-align:center;margin:25px 0;">
+        <h1 class="neon-text">自拍投稿</h1>
+        <p style="color:#ffb8d8;margin-top:8px;">上传你的专属自拍卡片</p>
+    </div>
+
+    <nav>
+        <a href="index.html">首页</a>
+        <a href="avatar.html">头像馆</a>
+        <a href="yulu.html">伤感语录</a>
+        <a href="dress.html">穿搭分享</a>
+        <a href="submit.html">自拍投稿</a>
+        <a href="music.html">音乐播放器</a>
+        <a href="message.html">留言板</a>
+        <a href="material.html">素材下载</a>
+        <a href="filter.html">在线滤镜</a>
+        <a href="card.html">个人资料卡</a>
+    </nav>
+
+    <div class="box">
+        <h2>上传自拍</h2>
+        <input type="file" id="selfieInput" accept="image/*" style="margin:15px 0;">
+        <div id="selfiePreview" style="margin:20px 0;"></div>
+
+        <h2>填写资料</h2>
+        <input type="text" id="nickname" placeholder="昵称" style="width:100%;padding:12px;margin:8px 0;border-radius:8px;border:1px solid #ff2e92;background:#111;color:#fff;">
+        <input type="text" id="sign" placeholder="个性签名" style="width:100%;padding:12px;margin:8px 0;border-radius:8px;border:1px solid #ff2e92;background:#111;color:#fff;">
+        <textarea id="mood" placeholder="今日心情文案" rows="4" style="width:100%;padding:12px;margin:8px 0;border-radius:8px;border:1px solid #ff2e92;background:#111;color:#fff;"></textarea>
+
+        <button class="btn" onclick="generateSelfieCard()">生成自拍卡片</button>
+    </div>
+
+    <footer>
+        精神小妹专属天地 © 2026
+    </footer>
+
+    <canvas id="selfieCanvas" style="display:none;"></canvas>
+
+    <script>
+        let selfieImage = null;
+
+        document.getElementById('selfieInput').addEventListener('change',function(e){
+            const file = e.target.files[0];
+            if(file){
+                const reader = new FileReader();
+                reader.onload = function(event){
+                    selfieImage = event.target.result;
+                    document.getElementById('selfiePreview').innerHTML = '<img src="'+selfieImage+'" style="max-width:300px;border-radius:12px;">';
+                }
+                reader.readAsDataURL(file);
+            }
+        });
+
+        function generateSelfieCard(){
+            if(!selfieImage){
+                alert('请先上传一张自拍');
+                return;
+            }
+
+            let nickname = document.getElementById('nickname').value || '匿名小妹';
+            let sign = document.getElementById('sign').value || '不被定义的自己';
+            let mood = document.getElementById('mood').value || '今天也很有精神';
+
+            const canvas = document.getElementById('selfieCanvas');
+            canvas.width = 750;
+            canvas.height = 1334;
+            const ctx = canvas.getContext('2d');
+
+            const gradient = ctx.createLinearGradient(0,0,750,1334);
+            gradient.addColorStop(0,'#ff2e92');
+            gradient.addColorStop(1,'#111');
+            ctx.fillStyle = gradient;
+            ctx.fillRect(0,0,750,1334);
+
+            const img = new Image();
+            img.crossOrigin = 'anonymous';
+            img.src = selfieImage;
+            img.onload = function(){
+                ctx.save();
+                ctx.beginPath();
+                ctx.arc(375,480,180,0,Math.PI*2);
+                ctx.clip();
+                ctx.drawImage(img,195,300,360,360);
+                ctx.restore();
+
+                ctx.fillStyle = '#fff';
+                ctx.font = 'bold 36px "微软雅黑"';
+                ctx.textAlign = 'center';
+                ctx.fillText(nickname,375,780);
+
+                ctx.font = '24px "微软雅黑"';
+                ctx.fillStyle = '#ffb8d8';
+                ctx.fillText(sign,375,830);
+
+                ctx.font = '20px "微软雅黑"';
+                ctx.fillStyle = '#fff';
+                let words = mood.split('');
+                let line = '';
+                let y = 920;
+                for(let i=0;i<words.length;i++){
+                    let test = line + words[i];
+                    if(ctx.measureText(test).width > 620){
+                        ctx.fillText(line,375,y);
+                        line = words[i];
+                        y += 35;
+                    }else{
+                        line = test;
+                    }
+                }
+                ctx.fillText(line,375,y);
+
+                const link = document.createElement('a');
+                link.download = '自拍投稿卡片.png';
+                link.href = canvas.toDataURL('image/png');
+                link.click();
+            }
+        }
+
+        function createHeart(){
+            const heart = document.createElement('div');
+            heart.className = 'heart';
+            heart.innerHTML = '❤';
+            heart.style.left = Math.random()*100+'vw';
+            heart.style.fontSize = Math.random()*20+10+'px';
+            heart.style.color = ['#ff2e92','#d83cff','#ffd700'][Math.floor(Math.random()*3)];
+            document.body.appendChild(heart);
+            setTimeout(()=>heart.remove(),8000);
+        }
+        setInterval(createHeart,300);
+
+        function toggleTheme(){
+            document.body.classList.toggle('dark');
+            document.body.classList.toggle('light');
+        }
+    </script>
+</body>
+</html>
