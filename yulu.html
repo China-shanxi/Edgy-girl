@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>伤感语录 - 精神小妹专属天地</title>
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box;font-family:"微软雅黑",sans-serif;}
+        body.dark{background:#0a0a0a;color:#fff;}
+        body.light{background:#fff0f6;color:#111;}
+        .heart{position:fixed;pointer-events:none;animation:heartMove 8s linear infinite;opacity:0.7;z-index:-1;}
+        @keyframes heartMove{
+            0%{transform:translateY(100vh) rotate(0deg);opacity:0;}
+            10%{opacity:1;}
+            90%{opacity:1;}
+            100%{transform:translateY(-10vh) rotate(360deg);opacity:0;}
+        }
+        .neon-text{
+            font-size:32px;font-weight:bold;
+            color:#fff;
+            text-shadow:
+                0 0 5px #ff2e92,
+                0 0 10px #ff2e92,
+                0 0 20px #ff2e92,
+                0 0 40px #d83cff;
+        }
+        .notice{
+            width:100%;height:35px;background:#ff2e92;line-height:35px;overflow:hidden;
+        }
+        .notice-scroll{
+            white-space:nowrap;animation:scroll 20s linear infinite;color:#111;font-weight:bold;
+        }
+        @keyframes scroll{0%{transform:translateX(100%);}100%{transform:translateX(-100%);}}
+        nav{width:100%;background:#181818;padding:15px 0;text-align:center;border-bottom:2px solid #ff2e92;}
+        nav a{
+            color:#ffb8d8;text-decoration:none;font-size:16px;margin:0 12px;padding:8px 14px;
+            border-radius:20px;transition:0.3s;
+        }
+        nav a:hover{background:#ff2e92;color:#000;box-shadow:0 0 12px #ff2e92;}
+        .box{
+            width:90%;max-width:1200px;margin:30px auto;background:#151515;padding:25px;
+            border-radius:18px;border:1px solid #ff2e9280;box-shadow:0 0 25px #d83cff40;
+        }
+        .box h2{margin-bottom:20px;color:#ff2e92;border-left:4px solid #ff2e92;padding-left:10px;}
+        .yulu-item{
+            background:#0f0f0f;
+            padding:15px;
+            border-radius:12px;
+            margin-bottom:15px;
+            border:1px solid #ff2e9260;
+        }
+        .btn{
+            display:inline-block;padding:10px 22px;background:linear-gradient(45deg,#ff2e92,#d83cff);
+            color:#000;border:none;border-radius:30px;font-weight:bold;cursor:pointer;margin:8px;
+            transition:0.3s;
+        }
+        .btn:hover{transform:scale(1.05);box-shadow:0 0 15px #ff2e92;}
+        .theme-toggle{
+            position:fixed;top:15px;right:15px;z-index:999;
+        }
+        footer{margin-top:50px;padding:20px;text-align:center;color:#aaa;font-size:14px;border-top:1px solid #222;}
+    </style>
+</head>
+<body class="dark">
+    <div class="notice">
+        <div class="notice-scroll">伤感语录｜网恋伤感｜高冷拽姐｜深夜破防｜小众签名｜朋友圈文案｜生成语录海报</div>
+    </div>
+
+    <div class="theme-toggle">
+        <button class="btn" onclick="toggleTheme()">切换夜间模式</button>
+    </div>
+
+    <div style="text-align:center;margin:25px 0;">
+        <h1 class="neon-text">伤感语录</h1>
+        <p style="color:#ffb8d8;margin-top:8px;">把情绪藏进文字里</p>
+    </div>
+
+    <nav>
+        <a href="index.html">首页</a>
+        <a href="avatar.html">头像馆</a>
+        <a href="yulu.html">伤感语录</a>
+        <a href="dress.html">穿搭分享</a>
+        <a href="submit.html">自拍投稿</a>
+        <a href="music.html">音乐播放器</a>
+        <a href="message.html">留言板</a>
+        <a href="material.html">素材下载</a>
+        <a href="filter.html">在线滤镜</a>
+        <a href="card.html">个人资料卡</a>
+    </nav>
+
+    <div class="box">
+        <h2>语录生成器</h2>
+        <div id="customYuluBox" style="background:#0f0f0f;padding:20px;border-radius:12px;margin-bottom:15px;">
+            <input type="text" id="yuluInput" placeholder="输入你想生成海报的文案..." style="width:100%;padding:12px;border-radius:8px;border:1px solid #ff2e92;background:#111;color:#fff;font-size:16px;">
+            <div style="margin:15px 0;">
+                <span>选择字体：</span>
+                <select id="fontSelect" style="padding:8px;border-radius:8px;background:#111;color:#fff;border:1px solid #ff2e92;">
+                    <option value="微软雅黑">微软雅黑</option>
+                    <option value="宋体">宋体</option>
+                    <option value="黑体">黑体</option>
+                </select>
+            </div>
+            <div style="margin:15px 0;">
+                <span>选择文字颜色：</span>
+                <input type="color" id="colorSelect" value="#ff2e92" style="width:40px;height:40px;border:none;border-radius:8px;">
+            </div>
+            <button class="btn" onclick="createCustomYuluPoster()">生成自定义语录海报</button>
+        </div>
+
+        <h2>精选语录</h2>
+        <div id="yuluList"></div>
+    </div>
+
+    <footer>
+        精神小妹专属天地 © 2026
+    </footer>
+
+    <canvas id="customYuluCanvas" style="display:none;"></canvas>
+
+    <script>
+        const yuluData = [
+            "新鲜感上头的时候，谁都能是偏爱。",
+            "后来我什么都想开了，就是什么都错过了。",
+            "拽姐不需要任何人的救赎，自己撑伞。",
+            "网恋始于聊天，止于见面，终于冷淡。",
+            "情绪上头的那一刻，像极了疯子。",
+            "不讨好谁，不将就谁，做冷感小妹。",
+            "夜里崩溃一万次，白天依旧装作无所谓。",
+            "你权衡利弊，我及时止损，互不亏欠。"
+        ];
+
+        function renderYulu(){
+            const list = document.getElementById('yuluList');
+            list.innerHTML = '';
+            yuluData.forEach((text,i)=>{
+                const item = document.createElement('div');
+                item.className = 'yulu-item';
+                item.innerHTML = `
+                    <p style="font-size:18px;line-height:1.8;color:#ffb8d8;">${text}</p>
+                    <button class="btn" onclick="copyYulu(${i})">复制</button>
+                    <button class="btn" onclick="makeYuluPoster(${i})">生成海报</button>
+                `;
+                list.appendChild(item);
+            });
+        }
+
+        function copyYulu(i){
+            navigator.clipboard.writeText(yuluData[i]).then(()=>alert('复制成功！'));
+        }
+
+        function makeYuluPoster(i){
+            document.getElementById('yuluInput').value = yuluData[i];
+            createCustomYuluPoster();
+        }
+
+        function createCustomYuluPoster(){
+            let text = document.getElementById('yuluInput').value.trim();
+            let font = document.getElementById('fontSelect').value;
+            let color = document.getElementById('colorSelect').value;
+
+            if(!text){
+                alert('请先输入文案');
+                return;
+            }
+
+            const canvas = document.getElementById('customYuluCanvas');
+            canvas.width = 750;
+            canvas.height = 1334;
+            const ctx = canvas.getContext('2d');
+
+            const gradient = ctx.createLinearGradient(0,0,750,1334);
+            gradient.addColorStop(0,'#111');
+            gradient.addColorStop(0.5,'#d83cff');
+            gradient.addColorStop(1,'#ff2e92');
+            ctx.fillStyle = gradient;
+            ctx.fillRect(0,0,750,1334);
+
+            ctx.fillStyle = color;
+            ctx.font = 'bold 48px "' + font + '"';
+            ctx.textAlign = 'center';
+
+            let words = text.split('');
+            let line = '';
+            let y = 600;
+            for(let i=0;i<words.length;i++){
+                let test = line + words[i];
+                if(ctx.measureText(test).width > 620){
+                    ctx.fillText(line,375,y);
+                    line = words[i];
+                    y += 70;
+                }else{
+                    line = test;
+                }
+            }
+            ctx.fillText(line,375,y);
+
+            ctx.font = '24px "' + font + '"';
+            ctx.fillStyle = '#fff';
+            ctx.fillText('精神小妹专属语录',375,1200);
+
+            const link = document.createElement('a');
+            link.download = '自定义语录海报.png';
+            link.href = canvas.toDataURL('image/png');
+            link.click();
+        }
+
+        function createHeart(){
+            const heart = document.createElement('div');
+            heart.className = 'heart';
+            heart.innerHTML = '❤';
+            heart.style.left = Math.random()*100+'vw';
+            heart.style.fontSize = Math.random()*20+10+'px';
+            heart.style.color = ['#ff2e92','#d83cff','#ffd700'][Math.floor(Math.random()*3)];
+            document.body.appendChild(heart);
+            setTimeout(()=>heart.remove(),8000);
+        }
+        setInterval(createHeart,300);
+
+        function toggleTheme(){
+            document.body.classList.toggle('dark');
+            document.body.classList.toggle('light');
+        }
+
+        renderYulu();
+    </script>
+</body>
+</html>
